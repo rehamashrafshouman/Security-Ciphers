@@ -1,0 +1,8 @@
+def main():
+    transition = input().split()
+    a = int(transition[0])
+    b = int(transition[1])
+    c = int(transition[2])
+    ans=pow(a,b,c)
+    print(ans)
+main()
