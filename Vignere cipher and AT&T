@@ -1,0 +1,92 @@
+key=input()
+plain=input()
+length=len(plain)
+vigcipher=""
+#Vigenere
+for i in range (0,length,len(key)):
+    for j in range (0, len(key)):
+      if(i+j<length):
+       vigcipher=vigcipher+chr((((ord(plain[i+j])-65)+(ord(key[j])-65))%26)+65)
+print("Vigenere:"+" "+vigcipher)
+
+#Vernam
+vernamcipher=""
+for i in range (0,length,len(key)):
+    for j in range (0, len(key)):
+      if(i+j<length):
+       v=hex(ord(plain[i+j])^ord(key[j])).upper()
+       if(len(v)<4):
+           vernamcipher=vernamcipher+"0"+v[2:]
+       else:
+            vernamcipher=vernamcipher+v[2:]
+print("Vernam: "+vernamcipher)
+
+
+#onetimepad
+if(length!=len(key)):
+    print("One-Time Pad: NO")
+else:
+    print("One-Time Pad: YES")
+3)Hill cipher
+#include <iostream>
+#include <math.h>
+#include <string>
+using namespace std;
+
+int main()
+{
+	int L , row , col;
+	cin >> L;
+	row = sqrt(L);
+	col = sqrt(L);
+	long long ** key = new long long*[row];
+	for (int i = 0; i < row; ++i)
+		key[i] = new long long[col];
+
+	for(int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < col; j++)
+		{
+			cin >> key[i][j];
+		}		
+	}
+
+	string plain;
+	cin >> plain;
+	int num = 0;
+	string cipher = "";
+	long long* result = new long long[100];
+	int *msg = new int[row];
+	for (int k = 0; k < plain.length();)
+	{
+		for (int h = 0; h < row; h++)
+		{
+			if (k>=plain.length())
+			{
+				msg[h] = 'X' -65;
+				k++;
+			}
+			else
+			{
+				msg[h] = plain[k]-65;
+				k++;
+			}
+		}
+		for (int i = 0; i < row; i++)
+		{
+			result [num+i]=0;
+			for (int j = 0; j < col; j++)
+			{	
+			 result[num+i] = result[num +i] + (key[i][j] * (msg[j]));		
+			}
+		}
+		num = k;
+	}
+	for (int i = 0; i < num; i++)
+	{
+		cipher = cipher + char(65+(result[i]%26));
+	}
+	cout << cipher<<endl;
+	system("pause");
+	return 0;
+}
