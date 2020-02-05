@@ -1,0 +1,27 @@
+output=""
+outsize=int(input())
+transition=input().split()
+permutation=[]
+for i in range(0,outsize):
+  permutation.append(int(transition[i]))
+inputsize=int(input())
+plain=input()
+convert=''
+for i in range (len(plain)-1,-1,-1):
+        l=int(plain[i],16)
+        l=bin(l)
+        l=l[2:]
+        if(len(l)%4!=0):
+            for j in range (4-len(l)):
+               l='0'+l
+            convert=l+convert
+        else:
+            convert=l+convert
+plain=convert
+for i in range (0,outsize):
+    index = permutation[i]
+    output = output+plain[index-1]
+output=int(output,2)
+output=hex(output)
+output=output[2:]
+print (output.upper())
