@@ -1,0 +1,48 @@
+# Take the input in variables
+transition=input().split()
+transition1=input().split()
+for i in range(0,2):
+  if i ==0 :
+      len_in=int(transition[i])
+  else :
+      len_out=int(transition[i])
+permutation=[]
+for i in range(0,len(transition1)):
+  permutation.append(int(transition1[i]))
+########################################
+output=""
+flag=0
+if(len_out< len_in):
+    print("IMPOSSIBLE")
+    flag=1
+elif(len_out==len_in):
+    check=set(permutation)
+    if(len(check)!=len(permutation)):
+        print("IMPOSSIBLE")
+        flag=1
+    else:
+        for i in range(0, len_out):
+            index = permutation[i]
+            output[index - 1] = i + 1
+elif(len_out>len_in):
+    taken=[]
+    output=[]
+    for k in range(len_in):
+        output.append(0)
+    check=set(permutation)
+    if len(check)<len_in:
+        print("IMPOSSIBLE")
+        flag=1
+    else:
+        for i in range (len(permutation)):
+            if permutation[i] in taken:
+                continue
+            else:
+                index = permutation[i]
+                output[index-1]=i+1
+                taken.append(index)
+screen=""
+if flag==0:
+    for j in range (len(output)):
+        screen=screen+str(output[j])+" "
+    print(screen)
