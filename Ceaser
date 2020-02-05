@@ -1,0 +1,6 @@
+key = int(input())
+plain = input()
+cipher=""
+for i in plain:
+  cipher = cipher+chr(65+((ord(i)-65+key) % 26))
+print(str(cipher))
