@@ -1,0 +1,71 @@
+PC1 = [57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 10, 2, 59, 51, 43, 35, 27, 19, 11, 3, 60, 52, 44, 36, 63,
+       55, 47, 39, 31, 23, 15, 7, 62, 54, 46, 38, 30, 22, 14, 6, 61, 53, 45, 37, 29, 21, 13, 5, 28, 20, 12, 4]
+PC2 = [14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10, 23, 19, 12, 4, 26, 8, 16, 7, 27, 20, 13, 2, 41, 52, 31, 37, 47, 55,
+       30, 40, 51, 45, 33, 48, 44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32]
+Rotations = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
+
+
+def leftRotate(value, n):
+    num_bits_in_int = 28
+    n = n % num_bits_in_int
+    mask = (1 << num_bits_in_int) - 1
+    result = (value << n) | (value >> (num_bits_in_int - n))
+    result = result & mask
+    result = bin(result)
+    result = result[2:]
+    if (len(result) < 28):
+        for q in range(28 - len(result)):
+            result = '0' + result
+    return result
+
+
+def binary(enter):
+    convert = ''
+    for i in range(len(enter) - 1, -1, -1):
+        l = int(enter[i], 16)
+        l = bin(l)
+        l = l[2:]
+        if (len(l) % 4 != 0):
+            for j in range(4 - len(l)):
+                l = '0' + l
+            convert = l + convert
+        else:
+            convert = l + convert
+    return convert
+
+key = input()
+outK = ''
+key = binary(key)
+for i in range(56):
+    index = PC1[i]
+    outK = outK + key[index - 1]
+outK = int(outK, 2)
+outK = hex(outK)
+outK = outK[2:]
+if (len(outK)!=14):
+    for j in range(14 - len(outK)):
+        outK = '0' + outK
+convert = ''
+outK = binary(outK)
+keys = []
+for i in range(16):
+    outk1 = outK[0:28]
+    outk2 = outK[28:56]
+    outk1 = leftRotate(int(outk1, 2), Rotations[i])
+    outk2 = leftRotate(int(outk2, 2), Rotations[i])
+    outK = str(outk1) + str(outk2)
+    convert = ''
+    # outK=binary(outK)
+    outt = ''
+    for k in range(48):
+        index = PC2[k]
+        outt = outt + outK[index - 1]
+    outt = int(outt, 2)
+    outt = hex(outt)
+    outt=outt[2:]
+    if len(outt)!= 12 :
+        for j in range (12 - len(outt)):
+            outt='0'+outt
+    keys.append(outt.upper())
+for i in keys:
+    print(i)
