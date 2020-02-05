@@ -1,0 +1,195 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class colrow{
+	int row = -1;
+	int col = -1;
+	bool exist = 0;
+public:
+	void set_row(int i)
+	{
+		row = i;
+	}
+	void set_col(int j)
+	{
+		col = j;
+	}
+	int get_row()
+	{
+		return row;
+	}
+	int get_col()
+	{
+		return col;
+	}
+	bool get_exist()
+	{
+		return exist;
+	}
+	void set_exist(bool p)
+	{
+		exist = p;
+	}
+};
+
+int main()
+{
+	string plain;
+	string start;
+	cin >> start;
+	cin >> plain;
+	long long startlen = start.length();
+	long long k = 0;
+	int IASCII = int('I');
+	int JASCII = int('J');
+	int alph = 65;
+	//key definition
+	int ** key = new int *[5];
+	for (int i = 0; i < 5; i++)
+	{
+		key[i] = new int[5];
+	}
+	/////////
+	//KEY SQUARE
+	colrow alphtrue[26];
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			if (k < startlen)
+			{
+				if(alphtrue[start[k] - 65].get_exist() == 1)
+				{
+					k++;
+					j--;
+					continue;
+				}
+				if ((start[k] - 65 == IASCII - 65 )||( start[k] - 65 == JASCII - 65))
+				{
+					key[i][j] = int('I');
+					alphtrue[IASCII - 65].set_row(i);
+					alphtrue[JASCII - 65].set_row(i);
+					alphtrue[IASCII - 65].set_col(j);
+					alphtrue[JASCII - 65].set_col(j);
+					alphtrue[IASCII - 65].set_exist(1);
+					alphtrue[JASCII - 65].set_exist(1);
+					k++;
+				}
+				else
+				{
+					key[i][j] = int(start[k]);
+					alphtrue[start[k] - 65].set_row(i);
+					alphtrue[start[k] - 65].set_col(j);
+					alphtrue[start[k] - 65].set_exist(1);
+					k++;
+				}
+			}
+			else
+			{
+				if (alphtrue[alph - 65].get_exist() == 1)
+				{
+					alph++;
+					j--;
+					continue;
+				}
+				if (alph - 65 == IASCII - 65 || alph - 65 == JASCII - 65)
+				{
+					key[i][j] = int('I');
+					alphtrue[IASCII - 65].set_row(i);
+					alphtrue[JASCII - 65].set_row(i);
+					alphtrue[IASCII - 65].set_col(j);
+					alphtrue[JASCII - 65].set_col(j);
+					alphtrue[IASCII - 65].set_exist(1);
+					alphtrue[JASCII - 65].set_exist(1);
+					alph++;
+				}
+				else
+				{
+					key[i][j] = alph;
+					alphtrue[alph - 65].set_row(i);
+					alphtrue[alph - 65].set_col(j);
+					alphtrue[alph - 65].set_exist(1);
+					alph++;
+				}
+			}
+		}
+	}
+	////////////////
+	///tarwee2 el plain
+	string plainedit = "";
+	long long charnum = 0;
+	for (int i = 0; (i < plain.length()); i = i + 2)
+	{
+		if (i + 1 >= plain.length())
+		{
+			plainedit = plainedit + plain[i];
+			charnum++;
+			continue;
+		}
+		plainedit = plainedit + plain[i];
+		charnum++;
+		if (plain[i] == plain[i + 1] || (plain[i] == 'J'  && plain[i + 1] == 'I') || (plain[i] == 'I'  && plain[i + 1] == 'J'))
+		{
+			if (plain[i] != 'X')
+			{
+				plainedit = plainedit + 'X';
+				i--;
+				charnum++;
+			}
+			else
+			{
+				plainedit = plainedit + 'Q';
+				i--;
+				charnum++;
+			}
+		}
+		else
+		{
+			if (plain[i + 1] != NULL)
+			{
+				plainedit = plainedit + plain[i + 1];
+				charnum++;
+			}
+		}
+	}
+	if (charnum % 2 != 0)
+	{
+		if (plainedit[plainedit.length() - 1] != 'X')
+			plainedit = plainedit + 'X';
+		else
+			plainedit = plainedit + 'Q';
+	}
+	/////////////////
+	string cipher = "";
+	colrow c1;
+	colrow c2;
+	for (int i = 0; i < plainedit.length(); i = i + 2)
+	{
+		c1 = alphtrue[int(plainedit[i]) - 65];
+		c2 = alphtrue[int(plainedit[i + 1]) - 65];
+		if (c1.get_row() == c2.get_row())
+		{
+			if (c1.get_col() != 4 && c2.get_col() != 4)
+				cipher = cipher + char(key[c1.get_row()][c1.get_col() + 1])+ char(key[c2.get_row()][c2.get_col() + 1]);
+			else if (c1.get_col() == 4)
+				cipher = cipher + char(key[c1.get_row()][0]) + char(key[c2.get_row()][c2.get_col() + 1]);
+			else if (c2.get_col() == 4)
+				cipher = cipher + char(key[c1.get_row()][c1.get_col() + 1]) + char(key[c2.get_row()][0]);
+		}
+		else if (c1.get_col() == c2.get_col())
+		{
+			if (c1.get_row() != 4 && c2.get_row() != 4)
+				cipher = cipher + char(key[c1.get_row() + 1][c1.get_col()]) + char(key[c2.get_row() + 1][c2.get_col()]);
+			else if (c1.get_row() == 4)
+				cipher = cipher + char(key[0][c1.get_col()]) + char(key[c2.get_row() + 1][c2.get_col()]);
+			else if (c2.get_row() == 4)
+				cipher = cipher + char(key[c1.get_row() + 1][c1.get_col()]) + char(key[0][c2.get_col()]);
+		}
+		else{
+			cipher = cipher + char(key[c1.get_row()][c2.get_col()]) + char(key[c2.get_row()][c1.get_col()]);
+		}
+	}
+	cout << cipher << endl;
+	system("pause");
+	return 0;
+}
